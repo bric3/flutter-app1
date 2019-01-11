@@ -159,6 +159,12 @@ class RandomWordsState extends State<RandomWords> {
         alreadySaved ? Icons.favorite : Icons.favorite_border,
         color: alreadySaved ? Colors.red : null,
       ),
+      subtitle: Row(
+        children: <Widget>[
+          Icon(Icons.speaker_notes, color: Colors.yellowAccent, size: 14,),
+          Container(padding: EdgeInsets.only(left: 4.0), child: Text(pair.asLowerCase, style: TextStyle(color: Colors.white)))
+        ],
+      ),
       onTap: () {
         setState(() {
           if (alreadySaved) {
