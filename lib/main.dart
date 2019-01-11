@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() => runApp(MyApp());
 
@@ -7,7 +8,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'Welcome to Bric3 app',
       home: RandomWords(),
@@ -36,6 +36,7 @@ class RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
   final _saved = new Set<WordPair>();
   final _biggerFont = const TextStyle(fontSize: 18.0);
+  Color _buttonColor = Colors.amber;
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +48,27 @@ class RandomWordsState extends State<RandomWords> {
         ],
       ),
       body: _buildSuggestions(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _buttonColor = Color((Random().nextInt(0xFFFFFF))).withOpacity(1.0);
+          });
+        },
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        tooltip: 'Whatever',
+        backgroundColor: _buttonColor,
+        child: Icon(Icons.fingerprint),
+//        mini: true,
+        highlightElevation: 10.0,
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
   void _pushSaved() {
     Navigator.of(context).push(
-      new MaterialPageRoute<void>(   // Add 20 lines from here...
+      new MaterialPageRoute<void>(
+        // Add 20 lines from here...
         builder: (BuildContext context) {
           Iterable<ListTile> tiles = _saved.map(
                 (WordPair pair) {
@@ -64,8 +80,7 @@ class RandomWordsState extends State<RandomWords> {
               );
             },
           );
-          List<Widget> divided = ListTile
-              .divideTiles(
+          List<Widget> divided = ListTile.divideTiles(
             context: context,
             tiles: tiles,
           ).toList();
@@ -87,9 +102,10 @@ class RandomWordsState extends State<RandomWords> {
   Widget _buildSuggestions() {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
-        physics: const AlwaysScrollableScrollPhysics (),
+        physics: const AlwaysScrollableScrollPhysics(),
         itemBuilder: /*1*/ (context, i) {
-          if (i.isOdd) return Divider(); /*2*/
+          if (i.isOdd) return Divider();
+          /*2*/
 
           final index = i ~/ 2; /*3*/
           if (index >= _suggestions.length) {
