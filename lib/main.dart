@@ -112,49 +112,62 @@ class RandomWordsState extends State<RandomWords> {
   }
 
   Widget _buildSuggestions() {
-    return ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        physics: const AlwaysScrollableScrollPhysics(),
-//        shrinkWrap: true,
-        itemBuilder: (context, i) {
+    return Container(
+      child: ListView.builder(
+          padding: const EdgeInsets.all(16.0),
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) {
 //          if (i.isOdd) return Divider();
 
 //          final index = i ~/ 2;
-          final index = i;
-          if (index >= _suggestions.length) {
-            _suggestions.addAll(generateWordPairs().take(10));
-          }
-          return _buildRow(_suggestions[index]);
-        });
+            if (index >= _suggestions.length) {
+              _suggestions.addAll(generateWordPairs().take(10));
+            }
+            return _buildRow(_suggestions[index]);
+          }),
+    );
   }
 
   Widget _buildRow(WordPair pair) {
     bool alreadySaved = _saved.contains(pair);
 
     return Card(
+//      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       elevation: 8.0,
       margin: new EdgeInsets.symmetric(horizontal: 1.0, vertical: 4.0),
       child: Container(
-        child: ListTile(
-          title: Text(
-            pair.asPascalCase,
-            style: _biggerFont,
-          ),
-          trailing: new Icon(
-            alreadySaved ? Icons.favorite : Icons.favorite_border,
-            color: alreadySaved ? Colors.red : null,
-          ),
-          onTap: () {
-            setState(() {
-              if (alreadySaved) {
-                _saved.remove(pair);
-              } else {
-                _saved.add(pair);
-              }
-            });
-          },
-        ),
+//        decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(10)),
+        child: _buildListTile(pair, alreadySaved),
       ),
+    );
+  }
+
+  ListTile _buildListTile(WordPair pair, bool alreadySaved) {
+    return ListTile(
+      title: Text(
+        pair.asPascalCase,
+        style: _biggerFont,
+      ),
+      leading: Container(
+        padding: EdgeInsets.only(right: 10.0),
+        decoration: new BoxDecoration(
+            border: new Border(
+                right: new BorderSide(width: 1.0, color: Colors.white24))),
+        child: Icon(Icons.whatshot, color: Colors.deepOrange),
+      ),
+      trailing: new Icon(
+        alreadySaved ? Icons.favorite : Icons.favorite_border,
+        color: alreadySaved ? Colors.red : null,
+      ),
+      onTap: () {
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(pair);
+          } else {
+            _saved.add(pair);
+          }
+        });
+      },
     );
   }
 }
