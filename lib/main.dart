@@ -1,6 +1,7 @@
+import 'dart:math';
+
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 void main() => runApp(MyApp());
 
@@ -82,7 +83,7 @@ class RandomWordsState extends State<RandomWords> {
         // Add 20 lines from here...
         builder: (BuildContext context) {
           Iterable<ListTile> tiles = _saved.map(
-                (WordPair pair) {
+            (WordPair pair) {
               return new ListTile(
                 title: new Text(
                   pair.asPascalCase,
@@ -102,7 +103,7 @@ class RandomWordsState extends State<RandomWords> {
             ),
             body: new ListView(
               children: divided,
-              physics: new AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
             ),
           );
         },
@@ -114,13 +115,14 @@ class RandomWordsState extends State<RandomWords> {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
         physics: const AlwaysScrollableScrollPhysics(),
-        itemBuilder: /*1*/ (context, i) {
-          if (i.isOdd) return Divider();
-          /*2*/
+//        shrinkWrap: true,
+        itemBuilder: (context, i) {
+//          if (i.isOdd) return Divider();
 
-          final index = i ~/ 2; /*3*/
+//          final index = i ~/ 2;
+          final index = i;
           if (index >= _suggestions.length) {
-            _suggestions.addAll(generateWordPairs().take(10)); /*4*/
+            _suggestions.addAll(generateWordPairs().take(10));
           }
           return _buildRow(_suggestions[index]);
         });
@@ -129,24 +131,30 @@ class RandomWordsState extends State<RandomWords> {
   Widget _buildRow(WordPair pair) {
     bool alreadySaved = _saved.contains(pair);
 
-    return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        style: _biggerFont,
+    return Card(
+      elevation: 8.0,
+      margin: new EdgeInsets.symmetric(horizontal: 1.0, vertical: 4.0),
+      child: Container(
+        child: ListTile(
+          title: Text(
+            pair.asPascalCase,
+            style: _biggerFont,
+          ),
+          trailing: new Icon(
+            alreadySaved ? Icons.favorite : Icons.favorite_border,
+            color: alreadySaved ? Colors.red : null,
+          ),
+          onTap: () {
+            setState(() {
+              if (alreadySaved) {
+                _saved.remove(pair);
+              } else {
+                _saved.add(pair);
+              }
+            });
+          },
+        ),
       ),
-      trailing: new Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
-        color: alreadySaved ? Colors.red : null,
-      ),
-      onTap: () {
-        setState(() {
-          if (alreadySaved) {
-            _saved.remove(pair);
-          } else {
-            _saved.add(pair);
-          }
-        });
-      },
     );
   }
 }
