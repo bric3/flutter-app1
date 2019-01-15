@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:app1/model.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() => runApp(MyApp());
 
@@ -131,7 +132,7 @@ class RandomWordsState extends State<RandomWords> {
 
   Iterable<Model> generateModel() {
     return generateWordPairs().map((pair) => Model(
-        name: pair.asPascalCase, icon: Icons.whatshot, pitch: "Lorem Ipsum"));
+        name: pair.asPascalCase, icon: FontAwesomeIcons.mobileAlt, pitch: "Lorem Ipsum"));
   }
 
   Widget _buildRow(Model model) {
