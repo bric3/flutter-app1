@@ -15,7 +15,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="O-Rly"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/app1_icon_android">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
