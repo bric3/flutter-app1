@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:app1/model.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
@@ -45,8 +46,8 @@ class RandomWords extends StatefulWidget {
 }
 
 class RandomWordsState extends State<RandomWords> {
-  final _suggestions = <WordPair>[];
-  final _saved = new Set<WordPair>();
+  final _suggestions = <Model>[];
+  final _saved = new Set<Model>();
   final _biggerFont = const TextStyle(fontSize: 18.0);
   Color _buttonColor = Colors.amber;
 
@@ -83,10 +84,10 @@ class RandomWordsState extends State<RandomWords> {
         // Add 20 lines from here...
         builder: (BuildContext context) {
           Iterable<ListTile> tiles = _saved.map(
-            (WordPair pair) {
+            (Model model) {
               return new ListTile(
                 title: new Text(
-                  pair.asPascalCase,
+                  model.name,
                   style: _biggerFont,
                 ),
               );
@@ -121,15 +122,20 @@ class RandomWordsState extends State<RandomWords> {
 
 //          final index = i ~/ 2;
             if (index >= _suggestions.length) {
-              _suggestions.addAll(generateWordPairs().take(10));
+              _suggestions.addAll(generateModel().take(10));
             }
             return _buildRow(_suggestions[index]);
           }),
     );
   }
 
-  Widget _buildRow(WordPair pair) {
-    bool alreadySaved = _saved.contains(pair);
+  Iterable<Model> generateModel() {
+    return generateWordPairs().map((pair) => Model(
+        name: pair.asPascalCase, icon: Icons.whatshot, pitch: "Lorem Ipsum"));
+  }
+
+  Widget _buildRow(Model model) {
+    bool alreadySaved = _saved.contains(model);
 
     return Card(
 //      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
@@ -137,15 +143,15 @@ class RandomWordsState extends State<RandomWords> {
       margin: new EdgeInsets.symmetric(horizontal: 1.0, vertical: 4.0),
       child: Container(
 //        decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(10)),
-        child: _buildListTile(pair, alreadySaved),
+        child: _buildListTile(model, alreadySaved),
       ),
     );
   }
 
-  ListTile _buildListTile(WordPair pair, bool alreadySaved) {
+  ListTile _buildListTile(Model model, bool alreadySaved) {
     return ListTile(
       title: Text(
-        pair.asPascalCase,
+        model.name,
         style: _biggerFont,
       ),
       leading: Container(
@@ -153,7 +159,7 @@ class RandomWordsState extends State<RandomWords> {
         decoration: new BoxDecoration(
             border: new Border(
                 right: new BorderSide(width: 1.0, color: Colors.white24))),
-        child: Icon(Icons.whatshot, color: Colors.deepOrange),
+        child: Icon(model.icon, color: Colors.deepOrange),
       ),
       trailing: new Icon(
         alreadySaved ? Icons.favorite : Icons.favorite_border,
@@ -161,16 +167,22 @@ class RandomWordsState extends State<RandomWords> {
       ),
       subtitle: Row(
         children: <Widget>[
-          Icon(Icons.speaker_notes, color: Colors.yellowAccent, size: 14,),
-          Container(padding: EdgeInsets.only(left: 4.0), child: Text(pair.asLowerCase, style: TextStyle(color: Colors.white)))
+          Icon(
+            Icons.speaker_notes,
+            color: Colors.yellowAccent,
+            size: 14,
+          ),
+          Container(
+              padding: EdgeInsets.only(left: 4.0),
+              child: Text(model.pitch, style: TextStyle(color: Colors.white)))
         ],
       ),
       onTap: () {
         setState(() {
           if (alreadySaved) {
-            _saved.remove(pair);
+            _saved.remove(model);
           } else {
-            _saved.add(pair);
+            _saved.add(model);
           }
         });
       },
