@@ -26,3 +26,32 @@ Current UI inspired by the following blogs or Stackoverflow answers
  - https://stackoverflow.com/questions/43928702/how-to-change-the-application-launcher-icon-on-flutter
  - https://stackoverflow.com/questions/46694153/changing-the-project-name/46694910
  - https://sergiandreplace.com/planets-flutter-creating-a-list-of-planets/
+
+== Deploy on iOS device (with a development certificate)
+
+Source: https://stackoverflow.com/questions/49268086/sending-my-flutter-app-to-my-real-iphone-instead-of-the-simulator[SO answer].
+
+Note the phone must be connected to the computer via the USB cable.
+
+1. Open the default Xcode workspace in your project by running `open ios/Runner.xcworkspace` in a
+   terminal window from your Flutter project directory.
+
+2. In Xcode, select the _Runner_ project in the left navigation panel.
+
+3. In the _Runner_ target settings page, make sure your _Development Team_ is
+   selected under _General_ > _Signing_ > _Team_.
+   When you select a team, Xcode creates and downloads a Development Certificate, registers your device
+   with your account, and creates and downloads a provisioning profile.
+
+You should do step 1-3 only once, from now on, your Mac got certificates and provision profiles, you can
+run "flutter devices" to see registered device.
+
+
+Also review the XCode project settings (https://flutter.io/docs/deployment/ios#review-xcode-project-settings)
+
+- XCode `Bundle identifier` changed to `com.github.bric3.app1`
+- Set `Automatically manage signing` to `true`
+- Set your team
+- `Deployment target` set to `8.0` (minimum supported versions)
+
+Eventually it may be needed to run the app from XCode.
